@@ -33,4 +33,27 @@ class BukuController extends Controller
 
         return redirect()->route('buku.index')->with('success', 'Buku berhasil ditambahkan!');
     }
+
+    public function edit($id)
+    {
+        $buku = Buku::findOrFail($id);
+        $kategori = Kategori::all();
+        return view('buku.edit', compact('buku', 'kategori'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $buku = Buku::findOrFail($id);
+        $buku->update($request->all());
+
+        return redirect()->route('buku.index')->with('success', 'Buku berhasil diperbarui!');
+    }
+
+    public function destroy($id)
+    {
+        $buku = Buku::findOrFail($id);
+        $buku->delete();
+
+        return redirect()->route('buku.index')->with('success', 'Buku berhasil dihapus!');
+    }
 }

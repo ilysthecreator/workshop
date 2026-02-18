@@ -25,6 +25,7 @@
                 <th>Judul</th>
                 <th>Pengarang</th>
                 <th>Kategori</th>
+                <th width="15%">Aksi</th>
               </tr>
             </thead>
             <tbody>
@@ -37,6 +38,14 @@
                   <label class="badge badge-gradient-info">
                     {{ $item->kategori->nama_kategori ?? 'Tanpa Kategori' }}
                   </label>
+                </td>
+                <td>
+                  <form action="{{ route('buku.destroy', $item->idbuku) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                    <a href="{{ route('buku.edit', $item->idbuku) }}" class="btn btn-sm btn-gradient-warning">Edit</a>
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-sm btn-gradient-danger">Hapus</button>
+                  </form>
                 </td>
               </tr>
               @endforeach

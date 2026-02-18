@@ -17,22 +17,33 @@
     <div class="card">
       <div class="card-body">
         <h4 class="card-title">Daftar Kategori Buku</h4>
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nama Kategori</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach($kategori as $item)
-            <tr>
-              <td>{{ $item->idkategori }}</td>
-              <td>{{ $item->nama_kategori }}</td>
-            </tr>
-            @endforeach
-          </tbody>
-        </table>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nama Kategori</th>
+                <th width="15%">Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach($kategori as $item)
+              <tr>
+                <td>{{ $item->idkategori }}</td>
+                <td>{{ $item->nama_kategori }}</td>
+                <td>
+                  <form action="{{ route('kategori.destroy', $item->idkategori) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori ini?');">
+                    <a href="{{ route('kategori.edit', $item->idkategori) }}" class="btn btn-sm btn-gradient-warning">Edit</a>
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-sm btn-gradient-danger">Hapus</button>
+                  </form>
+                </td>
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
