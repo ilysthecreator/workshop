@@ -10,6 +10,12 @@
             <h4>Halo! mari kita mulai</h4>
             <h6 class="font-weight-light">Masuk untuk melanjutkan.</h6>
             
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <form class="pt-3" method="POST" action="{{ route('login') }}">
                 @csrf
                 <div class="form-group">
@@ -30,6 +36,11 @@
                 </div>
                 <div class="mt-3">
                     <button type="submit" class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn">MASUK</button>
+                </div>
+                <div class="mb-2 mt-3">
+                    <a href="{{ route('google.login') }}" class="btn btn-block btn-danger auth-form-btn">
+                        <i class="mdi mdi-google me-2"></i>Masuk dengan Google
+                    </a>
                 </div>
                 <div class="my-2 d-flex justify-content-between align-items-center">
                     <div class="form-check">

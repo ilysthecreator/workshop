@@ -34,5 +34,19 @@
         <i class="mdi mdi-book-open-page-variant menu-icon"></i>
       </a>
     </li>
+
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="collapse" href="#generator" aria-expanded="false" aria-controls="generator">
+        <span class="menu-title">Generator</span>
+        <i class="menu-arrow"></i>
+        <i class="mdi mdi-file-pdf menu-icon"></i>
+      </a>
+      <div class="collapse" id="generator">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" href="{{ url('/download-sertifikat') }}" target="_blank">Sertifikat</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{ url('/download-undangan') }}" target="_blank">Undangan</a></li>
+        </ul>
+      </div>
+    </li>
   </ul>
 </nav>
