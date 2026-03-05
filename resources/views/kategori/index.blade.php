@@ -8,7 +8,12 @@
     </span> Master Kategori
   </h3>
   <nav aria-label="breadcrumb">
-    <a href="{{ route('kategori.create') }}" class="btn btn-gradient-primary btn-fw">+ Tambah Kategori</a>
+    <div class="d-flex justify-content-between">
+      <a href="{{ route('kategori.create') }}" class="btn btn-gradient-primary btn-fw me-2">+ Tambah Kategori</a>
+      <a href="{{ route('kategori.print') }}" target="_blank" class="btn btn-gradient-info btn-fw">
+        <i class="mdi mdi-printer"></i> Cetak PDF
+      </a>
+    </div>
   </nav>
 </div>
 

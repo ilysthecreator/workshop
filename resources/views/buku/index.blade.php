@@ -8,7 +8,12 @@
     </span> Master Buku
   </h3>
   <nav aria-label="breadcrumb">
-    <a href="{{ route('buku.create') }}" class="btn btn-gradient-primary btn-fw">+ Tambah Buku</a>
+    <div class="d-flex justify-content-between">
+      <a href="{{ route('buku.create') }}" class="btn btn-gradient-primary btn-fw me-2">+ Tambah Buku</a>
+      <a href="{{ route('buku.print') }}" target="_blank" class="btn btn-gradient-info btn-fw">
+        <i class="mdi mdi-printer"></i> Cetak PDF
+      </a>
+    </div>
   </nav>
 </div>
 

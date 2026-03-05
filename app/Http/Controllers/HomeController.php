@@ -27,6 +27,7 @@ class HomeController extends Controller
     {
         $buku = Buku::count();
         $kategori = Kategori::count();
-        return view('home', compact('buku', 'kategori'));
+        $barang = \App\Models\Barang::count();
+        return view('home', compact('buku', 'kategori', 'barang'));
     }
 }

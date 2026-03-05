@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Buku;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class BukuController extends Controller
 {
@@ -12,6 +13,15 @@ class BukuController extends Controller
     {
         $buku = Buku::with('kategori')->get();
         return view('buku.index', compact('buku'));
+    }
+
+    public function print()
+    {
+        $buku = Buku::with('kategori')->get();
+        $pdf = Pdf::loadView('buku.print', compact('buku'))
+                  ->setPaper('a4', 'landscape');
+
+        return $pdf->stream('laporan-buku.pdf');
     }
 
     public function create()

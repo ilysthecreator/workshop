@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kategori;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class KategoriController extends Controller
 {
@@ -11,6 +12,15 @@ class KategoriController extends Controller
     {
         $kategori = Kategori::all();
         return view('kategori.index', compact('kategori'));
+    }
+
+    public function print()
+    {
+        $kategori = Kategori::all();
+        $pdf = Pdf::loadView('kategori.print', compact('kategori'))
+                  ->setPaper('a4', 'portrait');
+
+        return $pdf->stream('laporan-kategori.pdf');
     }
 
     public function create()
