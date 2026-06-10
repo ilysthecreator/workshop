@@ -1,211 +1,71 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <style>
-        /*
-         * TnJ Self-Adhesive Label Paper No. 108
-         * ─────────────────────────────────────
-         * Label size  : 38mm × 18mm
-         * Grid        : 5 cols × 8 rows = 40 labels per sheet
-         * Gap         : 2mm between each label
-         * Page size   : 222mm × 175mm  (user-confirmed)
-         * @page margin: 3mm all sides
-         * Usable area : 216mm × 169mm
-         *
-         * x_start : 1–5  (column, 1-indexed)
-         * y_start : 1–8  (row,    1-indexed)
-         */
-
-        @page {
-            size: 222mm 185mm;
-            /* margin: 3mm; */
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background: #ffffff;
-            font-family: Arial, sans-serif;
-        }
-
-        /* One page wrapper — fits exactly inside @page usable area */
-        .page {
-            width: 220mm;   /* 222mm − 2×3mm @page margin */
-            height: 175mm;  /* 175mm − 2×3mm @page margin */
-            background: #f3e280;
-            page-break-after: always;
-            padding: 3mm;
-        }
-
-        /* Blade $loop->last adds this class — prevents blank trailing page */
-        .page-last {
-            page-break-after: auto;
-        }
-
-        /* Table-based grid — DomPDF safe (no flexbox/grid) */
-        .label-table {
-            border-collapse: separate;
-            border-spacing: 0;
-            table-layout: fixed;
-        }
-
-        .label-cell {
-            width: 38mm;
-            height: 18mm;
-            padding: 0;
-            vertical-align: top;
-        }
-
-        .col-gap {
-            width: 2mm;
-        }
-
-        .row-gap {
-            height: 2mm;
-        }
-
-        /* White sticker label */
-        .label-box {
-            width: 35mm;
-            height: 16mm;
-            background: #ffffff;
-            border: 0.4mm dashed #aaaaaa;
-            padding: 1.2mm 1.5mm;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Empty slot — shows yellow backing paper */
-        .label-empty {
-            width: 38mm;
-            height: 18mm;
-            background: transparent;
-            border: dotted #111111 2px;
-        }
-
-        .label-nama {
-            font-size: 5.5pt;
-            font-weight: bold;
-            color: #111111;
-            line-height: 1.2;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-
-        .label-harga {
-            font-size: 7.5pt;
-            font-weight: bold;
-            color: #111111;
-            margin-top: 0.8mm;
-            line-height: 1;
-        }
-
-        .label-timestamp {
-            font-size: 4pt;
-            color: #666666;
-            margin-top: 0.6mm;
-            line-height: 1.2;
-        }
-
-        .label-id {
-            position: absolute;
-            bottom: 1mm;
-            right: 1.5mm;
-            font-size: 4pt;
-            color: #aaaaaa;
-        }
-    </style>
+  <meta charset="utf-8">
+  <title>Label Cetak</title>
+  <style>
+    /* A4 portrait, no page margins */
+    @page { size: A4 portrait; margin: 0; }
+    html, body { margin:0; padding:0; width:210mm; height:297mm; font-family: sans-serif; }
+    /* place sheet 1mm from left and 1mm from top (reduced top margin) */
+    .sheet { position: relative; margin-left: 1mm; margin-top: 1mm; width:209mm; height:296mm; padding:0; page-break-after: always; }
+    .sheet:last-child { page-break-after: auto; }
+    .cell { position: absolute; width:38mm; height:18mm; box-sizing: border-box; padding: 0.5mm 1mm; overflow: hidden; }
+    .name { font-size: 7.5pt; margin-bottom: 2px; line-height:1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #000; }
+    .price { font-size: 10.5pt; font-weight:bold; margin-bottom: 3px; line-height:1; color: #000; }
+    .cell .meta { font-size: 7pt; font-weight:normal; color:#000; }
+    .cell img {
+      height: 6mm;
+      width: 75%;
+      display: block;
+      margin: 2px 0 2px 0;
+      object-fit: fill;
+    }
+    .id_barang {
+      font-size: 7pt;
+      line-height: 1;
+    }
+  </style>
 </head>
 <body>
+  @php $pages = $pages ?? []; @endphp
 
-@php
-    /*
-     * Grid constants
-     */
-    $cols    = 5;
-    $rows    = 8;
-    $perPage = $cols * $rows; // 40
+  @foreach($pages as $grid)
+  <div class="sheet">
+    @foreach($grid as $rIndex => $row)
+      @foreach($row as $cIndex => $cell)
+        {{-- compute offsets:
+             base horizontal increment = 41mm (38mm cell + 3mm gap)
+             add extra 2mm space to the right starting from column 3 (cIndex >= 2)
+             add additional 3mm right-shift starting from column 4 (cIndex >= 3)
+             move the first row down by 4mm (so it prints lower on the page)
+        --}}
+        @php
+          $baseLeft = $cIndex * 41;
+          $extraRight = 0;
+          if ($cIndex >= 2) $extraRight += 2; // mm for columns 3+
+          if ($cIndex >= 3) $extraRight += 3; // additional mm for columns 4+
+          $leftPos = $baseLeft + $extraRight;
 
-    // Use skipCount passed from controller or calculate it
-    $startOffset = isset($skipCount) ? (int)$skipCount : 0;
-
-    /*
-     * Build flat slot array.
-     * null  = empty slot (already-used label / start offset padding)
-     * array = item data
-     */
-    $itemsArray = isset($barangs) ? $barangs->toArray() : [];
-
-    $slots = array_merge(
-        array_fill(0, $startOffset, null),
-        $itemsArray
-    );
-
-    // Pad to fill the last page completely (avoids layout gaps)
-    $remainder = count($slots) % $perPage;
-    if ($remainder !== 0) {
-        $slots = array_merge($slots, array_fill(0, $perPage - $remainder, null));
-    }
-
-    // Split into pages of 40 slots each
-    $pages = array_chunk($slots, $perPage);
-@endphp
-
-@foreach ($pages as $pageSlots)
-    {{--
-        $loop->last → adds .page-last → page-break-after: auto
-        This prevents DomPDF from rendering a blank trailing page.
-    --}}
-    <div class="page {{ $loop->last ? 'page-last' : '' }}">
-        <table class="label-table">
-            @php
-                $pageRows = array_chunk($pageSlots, $cols);
-            @endphp
-
-            @foreach ($pageRows as $rowIndex => $rowSlots)
-
-                {{-- 2mm gap row between label rows (not before the first row) --}}
-                @if ($rowIndex > 0)
-                    <tr>
-                        @for ($g = 0; $g < ($cols * 2 - 1); $g++)
-                            <td class="row-gap"></td>
-                        @endfor
-                    </tr>
-                @endif
-
-                <tr>
-                    @foreach ($rowSlots as $colIndex => $slot)
-
-                        {{-- 2mm gap column between label columns (not before the first col) --}}
-                        @if ($colIndex > 0)
-                            <td class="col-gap"></td>
-                        @endif
-
-                        <td class="label-cell">
-                            @if ($slot !== null)
-                                <div class="label-box">
-                                    <div class="label-nama">{{ $slot['nama'] }}</div>
-                                    <div class="label-harga">Rp {{ number_format($slot['harga'], 0, ',', '.') }}</div>
-                                    <div class="label-timestamp">{{ $slot['timestamp'] }}</div>
-                                    <div class="label-id">{{ $slot['id_barang'] }}</div>
-                                </div>
-                            @else
-                                <div class="label-empty"></div>
-                            @endif
-                        </td>
-
-                    @endforeach
-                </tr>
-
-            @endforeach
-        </table>
-    </div>
-@endforeach
-
+          // increase vertical spacing between rows by 2mm (was 21 -> now 23)
+          $baseTop = $rIndex * 23;
+          $topPos = $baseTop;
+        @endphp
+        <div class="cell" style="left: {{ $leftPos }}mm; top: {{ $topPos }}mm;">
+          @if($cell)
+            <div class="name">{{ $cell->nama }}</div>
+            <div class="price">Rp {{ number_format($cell->harga,0,',','.') }}</div>
+            <div class="meta">
+              @if(!empty($cell->barcode))
+                <img src="{{ $cell->barcode }}" alt="barcode" />
+              @endif
+              <div class="id_barang">{{ $cell->id_barang }}</div>
+            </div>
+          @endif
+        </div>
+      @endforeach
+    @endforeach
+  </div>
+  @endforeach
 </body>
 </html>

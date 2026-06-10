@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        /*
+         * TnJ Self-Adhesive Label Paper No. 108
+         * ─────────────────────────────────────
+         * Source: MS Word Label Template (Mailings > Labels > Options)
+         *
+         * Label size       : 38mm wide × 18mm tall
+         * Grid             : 5 cols × 8 rows = 40 labels per sheet
+         * Top margin       : 4mm
+         * Side margin      : 4mm
+         * Horizontal pitch : 41mm (38mm label + 3mm gap between columns)
+         * Vertical pitch   : 20mm (18mm label + 2mm gap between rows)
+         *
+         * Verification:
+         *   Width  = 4mm + (5 × 41mm) - 3mm + 4mm = 210mm  ✓  (A4 width)
+         *   Height = 4mm + (8 × 20mm) - 2mm + minor = 162mm + bottom remainder
+         *
+         * Paper: A4 (210mm × 297mm)
+         */
+
+        @page {
+            margin: 0px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .page {
+            padding-top: 4mm;   /* Top margin from template */
+            padding-left: 4mm;  /* Side margin from template */
+            page-break-after: always;
+            position: relative;
+        }
+
+        .page-last {
+            page-break-after: auto;
+        }
+
+        /* Table-based grid — DomPDF safe (no flexbox/grid) */
+        .label-table {
+            border-collapse: separate;
+            border-spacing: 0;
+            table-layout: fixed;
+        }
+
+        .label-cell {
+            width: 38mm;
+            height: 18mm;
+            padding: 0;
+            vertical-align: top;
+        }
+
+        /* Horizontal pitch = 41mm → 38mm label + 3mm gap */
+        .col-gap {
+            width: 3mm;
+        }
+
+        /* Vertical pitch = 20mm → 18mm label + 2mm gap */
+        .row-gap {
+            height: 2mm;
+        }
+
+        /* Label sticker — fills the entire 38mm × 18mm cell */
+        .label-box {
+            width: 38mm;
+            height: 18mm;
+            border: 0.3mm dashed #cccccc;
+            padding: 1mm 1.5mm;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Empty slot — transparent placeholder for skipped labels */
+        .label-empty {
+            width: 38mm;
+            height: 18mm;
+            background: transparent;
+        }
+
+        .label-barcode {
+            text-align: center;
+            margin-bottom: 0.5mm;
+        }
+
+        .label-barcode img {
+            max-width: 34mm;
+            height: 5mm;
+        }
+
+        .label-nama {
+            font-size: 5.5pt;
+            font-weight: bold;
+            color: #111111;
+            line-height: 1.2;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .label-harga {
+            font-size: 7.5pt;
+            font-weight: bold;
+            color: #111111;
+            margin-top: 0.5mm;
+            line-height: 1;
+        }
+
+        .label-timestamp {
+            font-size: 4pt;
+            color: #666666;
+            margin-top: 0.3mm;
+            line-height: 1.2;
+        }
+
+        .label-id {
+            position: absolute;
+            bottom: 0.5mm;
+            right: 1mm;
+            font-size: 4pt;
+            color: #aaaaaa;
+        }
+    </style>
+</head>
+<body>
+
+
+    <div class="page page-last">
+        <table class="label-table">
+            
+            
+                
+                
+                <tr>
+                    
+                        
+                        
+                        <td class="label-cell">
+                                                            <div class="label-box">
+                                                                            <div class="label-barcode">
+                                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAE8AAAAZAQMAAABKLeEvAAAABlBMVEX///8AAABVwtN+AAAAAXRSTlMAQObYZgAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABhJREFUGJVjuDxntnFRzs1Ow2sMo0wwEwAk/4nl+8f8rQAAAABJRU5ErkJggg==" alt="barcode">
+                                        </div>
+                                                                        <div class="label-nama">Pensil 2B</div>
+                                    <div class="label-harga">Rp 10.000</div>
+                                    <div class="label-timestamp">2026-02-26 04:23:35</div>
+                                    <div class="label-id">26022601</div>
+                                </div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-box">
+                                                                            <div class="label-barcode">
+                                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAE8AAAAZAQMAAABKLeEvAAAABlBMVEX///8AAABVwtN+AAAAAXRSTlMAQObYZgAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABhJREFUGJVjuDxntnFRztliw2sMo0wwEwBjd4aTegZfrgAAAABJRU5ErkJggg==" alt="barcode">
+                                        </div>
+                                                                        <div class="label-nama">Buku</div>
+                                    <div class="label-harga">Rp 30.000</div>
+                                    <div class="label-timestamp">2026-02-26 04:24:52</div>
+                                    <div class="label-id">26022602</div>
+                                </div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-box">
+                                                                            <div class="label-barcode">
+                                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAE8AAAAZAQMAAABKLeEvAAAABlBMVEX///8AAABVwtN+AAAAAXRSTlMAQObYZgAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABhJREFUGJVjuDxntnFRpuF0w2sMo0wwEwD9p3qQisqp4wAAAABJRU5ErkJggg==" alt="barcode">
+                                        </div>
+                                                                        <div class="label-nama">Indomie Goreng</div>
+                                    <div class="label-harga">Rp 3.000</div>
+                                    <div class="label-timestamp">2026-02-26 04:49:27</div>
+                                    <div class="label-id">26022603</div>
+                                </div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-box">
+                                                                            <div class="label-barcode">
+                                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAE8AAAAZAQMAAABKLeEvAAAABlBMVEX///8AAABVwtN+AAAAAXRSTlMAQObYZgAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABhJREFUGJVjuDxntnFRpuTtjdcYRplgJgDK6otc/OKkCgAAAABJRU5ErkJggg==" alt="barcode">
+                                        </div>
+                                                                        <div class="label-nama">Sprite</div>
+                                    <div class="label-harga">Rp 5.000</div>
+                                    <div class="label-timestamp">2026-02-26 05:02:51</div>
+                                    <div class="label-id">26022604</div>
+                                </div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-box">
+                                                                            <div class="label-barcode">
+                                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAE8AAAAZAQMAAABKLeEvAAAABlBMVEX///8AAABVwtN+AAAAAXRSTlMAQObYZgAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABhJREFUGJVjuDxntnFRxsybhtcYRplgJgC8K4sR/Ta+SgAAAABJRU5ErkJggg==" alt="barcode">
+                                        </div>
+                                                                        <div class="label-nama">Pulpen</div>
+                                    <div class="label-harga">Rp 3.500</div>
+                                    <div class="label-timestamp">2026-02-26 05:37:30</div>
+                                    <div class="label-id">26022605</div>
+                                </div>
+                                                    </td>
+
+                                    </tr>
+
+            
+                
+                                    <tr>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                            </tr>
+                
+                <tr>
+                    
+                        
+                        
+                        <td class="label-cell">
+                                                            <div class="label-box">
+                                                                            <div class="label-barcode">
+                                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAE8AAAAZAQMAAABKLeEvAAAABlBMVEX///8AAABVwtN+AAAAAXRSTlMAQObYZgAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABhJREFUGJVjuDxnlo/LmZu7N15jGGWCmQAiE6KBGbtcpwAAAABJRU5ErkJggg==" alt="barcode">
+                                        </div>
+                                                                        <div class="label-nama">Sikat Gigi</div>
+                                    <div class="label-harga">Rp 3.000</div>
+                                    <div class="label-timestamp">2026-03-05 01:28:03</div>
+                                    <div class="label-id">26030501</div>
+                                </div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                                    </tr>
+
+            
+                
+                                    <tr>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                            </tr>
+                
+                <tr>
+                    
+                        
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                                    </tr>
+
+            
+                
+                                    <tr>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                            </tr>
+                
+                <tr>
+                    
+                        
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                                    </tr>
+
+            
+                
+                                    <tr>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                            </tr>
+                
+                <tr>
+                    
+                        
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                                    </tr>
+
+            
+                
+                                    <tr>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                            </tr>
+                
+                <tr>
+                    
+                        
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                                    </tr>
+
+            
+                
+                                    <tr>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                            </tr>
+                
+                <tr>
+                    
+                        
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                                    </tr>
+
+            
+                
+                                    <tr>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                                    <td class="row-gap"></td>
+                                            </tr>
+                
+                <tr>
+                    
+                        
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                    
+                        
+                                                    <td class="col-gap"></td>
+                        
+                        <td class="label-cell">
+                                                            <div class="label-empty"></div>
+                                                    </td>
+
+                                    </tr>
+
+                    </table>
+    </div>
+
+</body>
+</html>
